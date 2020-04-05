@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@color/bg_color"
+       >
+
+
+
+        <ImageView
+            android:id="@+id/iv_article_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            >
+
+        </ImageView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_gradient_white_black"
+            >
+
+        </FrameLayout>
+
+        <ImageView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:padding="5dp"
+            android:id="@+id/iv_back"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="48dp"
+            android:src="@drawable/ic_arrow_back_white_42dp"
+            android:background="@drawable/bg_black_trans_circle"
+            >
+
+        </ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_source"
+            android:layout_above="@+id/description"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_source"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center"
+                android:layout_gravity="start|center"
+                android:fontFamily="@font/robotoslab_regular"
+                android:textColor="@color/title_color"
+                android:textSize="20sp">
+
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/tv_published_date"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end|center"
+                android:layout_weight="1"
+                android:fontFamily="@font/robotoslab_regular"
+                android:gravity="end|center"
+                android:textColor="@color/source_color"
+                android:textSize="20sp">
+
+
+            </TextView>
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:id="@+id/description"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="56dp"
+            android:fontFamily="@font/robotoslab_regular"
+            android:textColor="@color/source_color"
+            android:textSize="14sp">
+        </TextView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ll_source"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="@font/robotoslab_bold"
+            android:layout_marginBottom="64dp"
+            android:id="@+id/title"
+            android:textColor="@color/title_color"
+            android:textSize="29sp">
+
+
+        </TextView>
+
+        </RelativeLayout>
+
+</layout>
