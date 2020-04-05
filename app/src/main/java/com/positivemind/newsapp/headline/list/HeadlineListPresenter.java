@@ -1,5 +1,6 @@
 package com.positivemind.newsapp.headline.list;
 
+import com.positivemind.newsapp.R;
 import com.positivemind.newsapp.base.BasePresenter;
 import com.positivemind.newsapp.data.Constants;
 import com.positivemind.newsapp.data.remote.HeadlineRemoteService;

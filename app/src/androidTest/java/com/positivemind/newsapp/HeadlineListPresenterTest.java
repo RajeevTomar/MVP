@@ -6,7 +6,10 @@ import androidx.lifecycle.Observer;
 import com.positivemind.newsapp.data.local.HeadlineLocalDataSource;
 import com.positivemind.newsapp.data.remote.HeadlineRemoteService;
 import com.positivemind.newsapp.headline.HeadlineModel;
+import com.positivemind.newsapp.headline.list.HeadlineListContract;
+import com.positivemind.newsapp.headline.list.HeadlineListPresenter;
 import com.positivemind.newsapp.server.BaseResponse;
+import com.positivemind.newsapp.utils.exception.AppException;
 import com.positivemind.newsapp.utils.rx.AppSchedulerProvider;
 import com.positivemind.newsapp.utils.rx.SchedulerProvider;
 
@@ -35,48 +38,33 @@ import static org.mockito.Mockito.when;
  * Created by Rajeev Tomar on 22,December,2019
  */
 @RunWith(JUnit4.class)
-public class HeadlineListViewModelTest {
+public class HeadlineListPresenterTest {
 
 
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
 
+    @Mock
+    HeadlineListContract.View headListView;
+
     SchedulerProvider schedulerProvider;
+
     @Mock
     HeadlineRemoteService headlineRemoteService;
-    @Mock
-    Observer<List<HeadlineModel>> remoteHeadlineObserver;
-
-    @Mock
-    Observer<List<HeadlineModel>> savedHeadlineObserver;
-
-    @Mock
-    Observer<Throwable> exceptionObserver;
 
     @Mock
     HeadlineLocalDataSource headlineLocalDataSource;
 
-    private HeadlineListViewModel headlineListViewModel;
+    private HeadlineListContract.Presenter headlineListPresenter;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         schedulerProvider = new AppSchedulerProvider();
-        headlineListViewModel = new HeadlineListViewModel(schedulerProvider,
+        headlineListPresenter = new HeadlineListPresenter(headListView,schedulerProvider,
                 headlineRemoteService, headlineLocalDataSource);
-        // set observer
-        headlineListViewModel.getHeadlineListMutableLiveData().observeForever(remoteHeadlineObserver);
-        headlineListViewModel.getThrowableMutableLiveData().observeForever(exceptionObserver);
-        headlineListViewModel.getSavedHeadlinesMutableLiveData().observeForever(savedHeadlineObserver);
     }
 
-
-    @Test
-    public void testNull() {
-        when(headlineRemoteService.getTopHeadlines("in")).thenReturn(null);
-        assertNotNull(headlineListViewModel.getHeadlineListMutableLiveData());
-        assertTrue(headlineListViewModel.getHeadlineListMutableLiveData().hasObservers());
-    }
 
 
     @Test
@@ -87,8 +75,8 @@ public class HeadlineListViewModelTest {
         headlineModels.add(new HeadlineModel());
         baseResponse.setArticles(headlineModels);
         when(headlineRemoteService.getTopHeadlines("in")).thenReturn(Single.just(baseResponse));
-        headlineListViewModel.fetchTopHeadlinesFromRemote();
-        verify(remoteHeadlineObserver).onChanged(headlineModels);
+        headlineListPresenter.fetchTopHeadlinesFromRemote();
+        verify(headListView).displayHeadlinesFromRemote(headlineModels);
     }
 
 
@@ -98,8 +86,9 @@ public class HeadlineListViewModelTest {
         List<HeadlineModel> headlineModels = new ArrayList<>();
         headlineModels.add(new HeadlineModel());
         when(headlineLocalDataSource.getAll()).thenReturn(Observable.just(headlineModels));
-        headlineListViewModel.fetchHeadlinesFromDB();
-        verify(savedHeadlineObserver).onChanged(headlineModels);
+        headlineListPresenter.fetchTopHeadlinesFromDB();
+
+        verify(headListView).displayHeadlinesFromDB(headlineModels);
     }
 
 
@@ -108,8 +97,8 @@ public class HeadlineListViewModelTest {
         Throwable throwable = new Throwable("Error");
         when(headlineRemoteService.getTopHeadlines("in")).
                 thenReturn(Single.error(throwable));
-        headlineListViewModel.fetchTopHeadlinesFromRemote();
-        verify(exceptionObserver).onChanged(throwable);
+        headlineListPresenter.fetchTopHeadlinesFromRemote();
+        verify(headListView).onErrorFetchTopHeadlines(new AppException(throwable.getMessage()));
     }
 
 
@@ -117,7 +106,7 @@ public class HeadlineListViewModelTest {
     public void tearDown() throws Exception {
         headlineRemoteService = null;
         headlineLocalDataSource = null;
-        headlineListViewModel = null;
+        headlineListPresenter = null;
     }
 
 }
